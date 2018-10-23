@@ -10,6 +10,7 @@ console.log('App started!');
 
 let isReady = false;
 
+// This is a simple function.
 function getRootResponse(req) {
     return ' <h1>Hello World!</h1><p>This is a simple response to a <b>GET</b> request on the base path</p>\n';
 }
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
     console.log(`Response sent for GET ${req.path} to ${req.hostname}`);
 });
 
+// MONITORING: heartbeat
 app.get('/health', (req, res) => {
     res.sendStatus(200);
 });
@@ -30,6 +32,7 @@ app.get('/readiness', (req, res) => {
     res.sendStatus(status);
 });
 
+//  CONFIG: define
 let mongoHost = process.env.MONGO_HOST;
 let mongoPort = process.env.MONGO_PORT;
 let dbName = process.env.MONGO_DB_NAME;
@@ -58,6 +61,7 @@ if (!appPort) {
 let url = `mongodb://${mongoHost}:${mongoPort}`;
 let db;
 
+// DATABASE: connect
 let maxAttempts = 20;
 for (let attempt = 0; attempt < maxAttempts; attempt++) {
     function attemptConnection() {
@@ -88,6 +92,7 @@ for (let attempt = 0; attempt < maxAttempts; attempt++) {
     setTimeout(attemptConnection, attempt * 2 * 1000);
 }
 
+// API: user methods
 app.get('/users', (req, res) => {
     console.log(`Received a GET request on ${req.path} from ${req.hostname}`);
     let allUsers = db.users;
