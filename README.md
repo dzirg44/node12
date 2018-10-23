@@ -26,7 +26,6 @@ let mongoHost = process.env.MONGO_HOST;
   console.log(`Connecting to url for ${attempt + 1} attempt: ${url}`);
   ```
   - we logging everything, errors, success, put, get, delete, all operations must be written to the `stdout`
-  - 
   
   - health status for our application
     for the database:
