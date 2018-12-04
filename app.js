@@ -28,6 +28,14 @@ app.get('/', (req, res) => {
     res.send(getRootResponse(req));
     console.log(`Response sent for GET ${req.path} to ${req.hostname}`);
 });
+app.get('/webapp', (req, res) => {
+    console.log('Cookies: ', req.cookies)
+    // Cookies that have been signed
+    console.log('Signed Cookies: ', req.signedCookies)
+    console.log(`Received a GET request on ${req.path} from ${req.hostname}`);
+    res.send(getRootResponse(req));
+    console.log(`Response sent for GET ${req.path} to ${req.hostname}`);
+});
 
 // MONITORING: heartbeat
 app.get('/health', (req, res) => {
