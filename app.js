@@ -76,6 +76,7 @@ if (!appPort) {
 let url = `mongodb://${mongoHost}:${mongoPort}`;
 let db;
 
+
 // DATABASE: connect
 let maxAttempts = 20;
 for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -104,7 +105,7 @@ for (let attempt = 0; attempt < maxAttempts; attempt++) {
         }
     }
 
-    setTimeout(attemptConnection, attempt * 2 * 1000);
+    setTimeout(attemptConnection, attempt * 2 * 60000);
 }
 // Prometheus //
 /**
