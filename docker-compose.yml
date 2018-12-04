@@ -6,10 +6,11 @@ services:
     ports:
      - "13000:3000"
     environment:
+     - MONGO_ENABLE=true
      - MONGO_HOST=signnow-mongodb
      - MONGO_PORT=27017
      - MONGO_DB_NAME=mydb
-     - PORT=3000
+     - APP_PORT=3000
     depends_on:
      - mongodb
 

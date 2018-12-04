@@ -2,21 +2,28 @@ require('log-timestamp');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongo = require('mongodb');
+const os = require('os');
+const Prometheus = require('./util.js');
 const mongoClient = mongo.MongoClient;
+const cookieParser = require('cookie-parser')
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cookieParser());
 console.log('App started!');
 
 let isReady = false;
 
 // This is a simple function.
 function getRootResponse(req) {
-    return ' <h1>Hello World!</h1><p>This is a simple response to a <b>GET</b> request on the base path</p>\n';
+    return os.hostname() + '<h1>Hello World!</h1><p>This is a simple response to a <b>GET</b> request on the base path</p>\n';
 }
 
 console.log('Registering routes');
 app.get('/', (req, res) => {
+    console.log('Cookies: ', req.cookies)
+    // Cookies that have been signed
+    console.log('Signed Cookies: ', req.signedCookies)
     console.log(`Received a GET request on ${req.path} from ${req.hostname}`);
     res.send(getRootResponse(req));
     console.log(`Response sent for GET ${req.path} to ${req.hostname}`);
@@ -36,7 +43,7 @@ app.get('/readiness', (req, res) => {
 let mongoHost = process.env.MONGO_HOST;
 let mongoPort = process.env.MONGO_PORT;
 let dbName = process.env.MONGO_DB_NAME;
-let appPort = Number(process.env.PORT);
+let appPort = Number(process.env.APP_PORT);
 
 if (!mongoHost) {
     mongoHost = '34.174.101.55';
@@ -91,8 +98,24 @@ for (let attempt = 0; attempt < maxAttempts; attempt++) {
 
     setTimeout(attemptConnection, attempt * 2 * 1000);
 }
+// Prometheus //
+/**
+ * The below arguments start the counter functions
+ */
+app.use(Prometheus.requestCounters);  
+app.use(Prometheus.responseCounters);
 
-// API: user methods
+/**
+ * Enable metrics endpoint
+ */
+Prometheus.injectMetricsRoute(app);
+
+/**
+ * Enable collection of default metrics
+ */
+Prometheus.startCollection();
+
+// API: user methods //
 app.get('/users', (req, res) => {
     console.log(`Received a GET request on ${req.path} from ${req.hostname}`);
     let allUsers = db.users;
