@@ -52,6 +52,7 @@ let mongoHost = process.env.MONGO_HOST;
 let mongoPort = process.env.MONGO_PORT;
 let dbName = process.env.MONGO_DB_NAME;
 let appPort = Number(process.env.APP_PORT);
+let appVersion = process.env.APP_VERSION;
 
 if (!mongoHost) {
     mongoHost = '34.174.101.55';
@@ -71,6 +72,11 @@ if (!dbName) {
 if (!appPort) {
     appPort = 3000;
     console.log(`PORT not specified, using default port: ${appPort}`);
+}
+
+if (!appVersion) {
+   appVersion = 'undefinded';
+   console.log(`Application version: ${appVersion}`);
 }
 
 let url = `mongodb://${mongoHost}:${mongoPort}`;

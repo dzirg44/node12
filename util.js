@@ -1,11 +1,42 @@
 /**
  * Newly added requires
  */
-var Register = require('prom-client').register;  
-var Counter = require('prom-client').Counter;  
-var Histogram = require('prom-client').Histogram;  
-var Summary = require('prom-client').Summary;  
-var ResponseTime = require('response-time');  
+var Register = require('prom-client').register;
+var Counter = require('prom-client').Counter;
+var Histogram = require('prom-client').Histogram;
+var Summary = require('prom-client').Summary;
+var Gauge = require('prom-client').Gauge;
+var ResponseTime = require('response-time');
+let appVersion = process.env.APP_VERSION;
+let appCommit = process.env.APP_COMMIT;
+let appBranch = process.env.APP_BRANCH;
+let appTime = process.env.APP_TIME;
+
+if (!appVersion) {
+   appVersion = 'undefinded';
+   console.log(`Application version: ${appVersion}`);
+}
+
+if (!appCommit) {
+   appCommit = 'undefinded';
+   console.log(`Application commit: ${appCommit}`);
+}
+
+if (!appBranch) {
+   appBranch = 'undefinded';
+   console.log(`Application branch: ${appBranch}`);
+}
+
+if (!appTime) {
+   appTime = 'undefinded';
+   console.log(`Application branch: ${appTime}`);
+}
+
+var version = appVersion;
+var commit = appCommit;
+var branch = appBranch;
+var buildTime = appTime;
+
 
 /**
  * A Prometheus counter that counts the invocations of the different HTTP verbs
@@ -26,6 +57,28 @@ module.exports.pathsTaken = pathsTaken = new Counter({
     help: 'Paths taken in the app',
     labelNames: ['path']
 });
+
+
+module.exports.pathsTaken = pathsAdmin = new Gauge({
+      name: `build_info`,
+      help: `A metric with a constant 1 value labeled by version, revision, platform, nodeVersion, os from which was built`,
+      labelNames: [
+        'version',
+        'commit',
+        'branch',
+        'buildTime',
+      ]
+});
+
+pathsAdmin.set(
+      {
+        version,
+        commit,
+        branch,
+        buildTime,
+      },
+      1,
+);
 
 /**
  * A Prometheus summary to record the HTTP method, path, response code and response time
