@@ -6,26 +6,26 @@ pipeline {
     agent none
     stages {
         stage('fetch data from Vault') {
-         steps {
-         script {
-          // Assign Vault secrets to env variables
-          def secrets = [
-            [$class: 'VaultSecret', path: 'kv/woody/dev/ecr-api', secretValues: [
-              [$class: 'VaultSecretValue', envVar: 'registry_id', vaultKey: 'registry_id'],
-              [$class: 'VaultSecretValue', envVar: 'registry_url', vaultKey: 'registry_id']
-            ]],
-          ]
+             steps {
+               script {
+                 // Assign Vault secrets to env variables
+                 def secrets = [
+                   [$class: 'VaultSecret', path: 'kv/woody/dev/ecr-api', secretValues: [
+                   [$class: 'VaultSecretValue', envVar: 'registry_id', vaultKey: 'registry_id'],
+                   [$class: 'VaultSecretValue', envVar: 'registry_url', vaultKey: 'registry_id']
+                   ]]
+                 ]
 
-          def configuration = [$class: 'VaultConfiguration',
+                 def configuration = [$class: 'VaultConfiguration',
                                 vaultUrl: "${env.STRYBER_VAULT_URL}",
                                 vaultCredentialId: 'vault-app-token']
-          // Wrapper to avail env variables
-            wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
-            sh 'echo $registry_id'
-            sh 'echo $registry_url'
+                 // Wrapper to avail env variables
+                 wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
+                   sh 'echo $registry_id'
+                   sh 'echo $registry_url'
+                   }
+                 }
            }
-          }
-         }
         }
 		stage('pull_image') {
             agent { docker { image 'python:3.5.1' } }
