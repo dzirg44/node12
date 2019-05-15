@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-import jenkins.model.Jenkins
+//import jenkins.model.Jenkins
 
 pipeline {
     //agent { docker { image 'python:3.5.1' } }
@@ -14,11 +14,10 @@ pipeline {
 		stage('set_version') {
             agent { docker { image 'python:3.5.1' } }
 		    steps {
-              script {
-               VAULT_ADDR = envVars['myVar']
-               
-              }
-               echo "THIS iS MY VAULT ADDR: ${VAULT_ADDR}"
+//              script {
+//               VAULT_ADDR = envVars['myVar']               
+//              }
+               echo "THIS iS MY VAULT ADDR: ${env.STRYBER_VAULT_URL}"
 			 }
 		}
         stage('push_registry') {
@@ -29,5 +28,5 @@ pipeline {
         }
     }
 }
-def envVars = Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars() 
+//def envVars = Jenkins.instance.getGlobalNodeProperties()[0].getEnvVars() 
 
