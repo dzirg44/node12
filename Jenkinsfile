@@ -6,6 +6,7 @@ pipeline {
     agent none
     stages {
         stage('fetch data from Vault') {
+             agent { docker { image 'python:3.5.1' } }
              steps {
                script {
                  // Assign Vault secrets to env variables
