@@ -18,10 +18,10 @@ pipeline {
                  ]
 
                  def configuration = [$class: 'VaultConfiguration',
-                                vaultUrl: 'http://test.ua',
+                                vaultUrl: "${env.STRYBER_VAULT_URL}",
                                 vaultCredentialId: 'vault-app-token']
                  // Wrapper to avail env variables
-                 wrap([$class: 'VaultBuildWrapper', vaultSecrets: secrets]) {
+                 wrap([$class: 'VaultBuildWrapper', configuration: configuration, vaultSecrets: secrets]) {
                    sh 'echo $registry_id'
                    sh 'echo $registry_url'
                    }
