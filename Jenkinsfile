@@ -5,7 +5,7 @@ pipeline {
     //agent { docker { image 'python:3.5.1' } }
     agent none
     stages {
-        stage('fetch data from Vault') {
+/*        stage('fetch data from Vault') {
              agent { docker { image 'python:3.5.1' } }
              steps {
                script {
@@ -28,10 +28,11 @@ pipeline {
                  }
            }
         }
+*/
 		stage('pull_image') {
-            agent { docker { image 'python:3.5.1' } }
+            agent { node { label 'woody-agent' } }
 			steps { 
-               sh 'echo "pull image"'
+               sh 'ip a'
 			}
 		}
 		stage('set_version') {
